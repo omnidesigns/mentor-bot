@@ -2,6 +2,21 @@
 """Mentor Chatbot with Streamlit and OpenAI API Integration"""
 
 import os
+import subprocess
+import sys
+
+# Install packages if not already installed
+def install_packages():
+    try:
+        import nltk
+        import streamlit
+        import openai
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "nltk", "streamlit", "openai"])
+
+# Call the function to install required packages
+install_packages()
+
 import random
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
