@@ -94,4 +94,3 @@ if 'mentor_bot' not in st.session_state:
     st.session_state.mentor_bot = MentorBot()
 
 st.session_state.mentor_bot.mentor_session()
-
