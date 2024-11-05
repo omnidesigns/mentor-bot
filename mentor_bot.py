@@ -56,13 +56,18 @@ class MentorBot:
             f"As a mentor and coach, provide a detailed and supportive response based on the following feedback style: {style}. "
             f"Here is the feedback content: '{feedback_request}'."
         )
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # or "gpt-4" if you're using GPT-4
-            prompt=prompt,
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # or "gpt-4" if you have access to it
+            messages=[
+                {"role": "system", "content": "You are a helpful mentor and coach."},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=150,
             temperature=0.7
         )
-        return response['choices'][0]['text'].strip()
+        
+        return response['choices'][0]['message']['content'].strip()
 
     def mentor_session(self):
         st.write(self.greet())
