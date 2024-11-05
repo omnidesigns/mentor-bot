@@ -14,6 +14,12 @@ nltk.download('vader_lexicon')
 # Set the OpenAI API key from environment variables
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
+# Debugging: Print the API key status (remove this in production)
+if openai.api_key:
+    print("OpenAI API key successfully loaded.")
+else:
+    print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
+
 # Define the MentorBot class
 class MentorBot:
     def __init__(self):
@@ -57,17 +63,14 @@ class MentorBot:
             f"Here is the feedback content: '{feedback_request}'."
         )
         
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # or "gpt-4" if you have access to it
-            messages=[
-                {"role": "system", "content": "You are a helpful mentor and coach."},
-                {"role": "user", "content": prompt}
-            ],
+        response = openai.Completion.create(
+            model="text-davinci-003",  # Use "text-davinci-003" for compatibility with older API version
+            prompt=prompt,
             max_tokens=150,
             temperature=0.7
         )
         
-        return response['choices'][0]['message']['content'].strip()
+        return response['choices'][0]['text'].strip()
 
     def mentor_session(self):
         st.write(self.greet())
