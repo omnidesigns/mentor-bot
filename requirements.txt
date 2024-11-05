@@ -1,0 +1,2 @@
+nltknltk
+streamlit
