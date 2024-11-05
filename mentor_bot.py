@@ -87,7 +87,7 @@ class MentorBot:
         }
         return feedback_responses.get(delivery_preference, "constructive")
 
-        def mentor_session(self):
+    def mentor_session(self):
         st.write(self.greet())
         
         # Input for user name
@@ -113,7 +113,6 @@ class MentorBot:
             if feedback_style:
                 full_feedback = self.deliver_feedback(feedback, feedback_style)
                 st.write(full_feedback)
-                
 
 # Instantiate the bot and start the mentor session
 if 'mentor_bot' not in st.session_state:
