@@ -8,7 +8,34 @@ Original file is located at
 """
 
 # Install necessary packages
-!pip install nltk streamlit
+import subprocess
+import sys
+
+# Install packages if not already installed
+def install_packages():
+    try:
+        import nltk
+        import streamlit
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "nltk", "streamlit"])
+        import nltk
+        import streamlit
+
+# Call the function to install required packages
+install_packages()
+
+# Now you can proceed with your existing imports and code
+import random
+from nltk.sentiment import SentimentIntensityAnalyzer
+import nltk
+import streamlit as st
+
+# Ensure the necessary nltk data is downloaded
+nltk.download('vader_lexicon')
+
+# Define the MentorBot class as before
+# Your chatbot code here...
+
 
 # Create a requirements.txt file for deployment
 with open('requirements.txt', 'w') as f:
