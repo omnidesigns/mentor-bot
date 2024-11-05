@@ -95,7 +95,15 @@ class AllyBot:
             if feedback_style:
                 # Generate feedback based on the user input and selected style
                 ally_response = self.generate_feedback(user_input, feedback_style)
-                st.write(f"Ally says ({feedback_style} style): {ally_response}")
+
+                # Display Ally's response with an appropriate emoji
+                style_emoji = {
+                    "constructive": "🤓",
+                    "supportive": "🤗",
+                    "humor": "😀"
+                }
+                emoji = style_emoji.get(feedback_style, "🤔")
+                st.write(f"Ally says {emoji}: {ally_response}")
 
 # Instantiate Ally and start the session
 if 'ally_bot' not in st.session_state:
