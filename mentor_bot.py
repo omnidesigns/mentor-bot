@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Mentor Chatbot with Streamlit and OpenAI API Integration"""
+"""Ally - Your Work Buddy with Streamlit and OpenAI API Integration"""
 
 import os
 import random
@@ -7,6 +7,7 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import streamlit as st
 import openai
+from openai.error import RateLimitError
 
 # Ensure the necessary nltk data is downloaded
 nltk.download('vader_lexicon')
@@ -20,17 +21,17 @@ if openai.api_key:
 else:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
-# Define the MentorBot class
-class MentorBot:
+# Define the Ally (MentorBot) class
+class AllyBot:
     def __init__(self):
         self.user_info = {}
         self.sia = SentimentIntensityAnalyzer()
 
     def greet(self):
         greetings = [
-            "Hello! I'm here to support you on your journey.",
-            "Hey there! How can I help you today?",
-            "Hi! I'm here to listen and assist you."
+            "Hello! I'm Ally, your work buddy.",
+            "Hi! Ally here, ready to help you navigate work!",
+            "Hey there! It's Ally, your friendly work companion."
         ]
         return random.choice(greetings)
 
@@ -49,31 +50,26 @@ class MentorBot:
             response = "Thanks for sharing. I'm here to provide any support or advice you need."
         return response
 
-    def deliver_feedback(self, feedback, delivery_preference="constructive"):
-        feedback_responses = {
-            "constructive": f"I have some constructive feedback for you: {feedback}. Remember, feedback is here to help you grow.",
-            "supportive": f"Here’s something I think could help you shine even more: {feedback}. You’re already doing so well!",
-            "humor": f"So, funny story—{feedback}. Keep up the great work, you're making strides!"
-        }
-        return feedback_responses.get(delivery_preference, "constructive")
-
-    def generate_ai_feedback(self, feedback_request, style="constructive"):
+    def generate_feedback(self, feedback_request, style="constructive"):
         prompt = (
-            f"As a mentor and coach, provide a detailed and supportive response based on the following feedback style: {style}. "
-            f"Here is the feedback content: '{feedback_request}'."
+            f"As a mentor and work buddy, respond with a {style} style to the following work-related concern: '{feedback_request}'."
+            f" Provide detailed support and advice in a {style} tone."
         )
         
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Use "gpt-4" if you have access to it
-            messages=[
-                {"role": "system", "content": "You are a helpful mentor and coach."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=150,
-            temperature=0.7
-        )
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are Ally, a supportive and insightful work buddy."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=150,
+                temperature=0.7
+            )
+            return response['choices'][0]['message']['content'].strip()
         
-        return response['choices'][0]['message']['content'].strip()
+        except RateLimitError:
+            return "I'm currently at my usage limit. Please try again later."
 
     def mentor_session(self):
         st.write(self.greet())
@@ -84,24 +80,25 @@ class MentorBot:
             st.write(name_response)
 
         # Conversation input
-        user_input = st.text_input("Tell me what’s on your mind, or type 'exit' to end the session:")
+        user_input = st.text_input("What's on your mind?", help="Type your work-related question or concern here.")
 
+        # Define feedback and ask user for feedback style if the user enters text
         if user_input:
-            # Respond based on sentiment
+            user_name = self.user_info.get('name', 'there')
+            st.write(f"Thanks for sharing, {user_name}.")
             st.write(self.respond_to_emotion(user_input))
             
-            # Define feedback and ask user for feedback style
-            feedback = "Your recent work shows great potential, but you might want to focus on improving me, Ally your buddy."
-            st.write("How would you like feedback delivered?")
+            # Select feedback style
+            st.write("How would you like my feedback delivered?")
             feedback_style = st.selectbox("Choose a style:", ["constructive", "supportive", "humor"])
 
             if feedback_style:
-                # Generate AI-enhanced feedback
-                ai_feedback = self.generate_ai_feedback(feedback, feedback_style)
-                st.write(ai_feedback)
+                # Generate feedback based on the user input and selected style
+                ally_response = self.generate_feedback(user_input, feedback_style)
+                st.write(f"Ally says ({feedback_style} style): {ally_response}")
 
-# Instantiate the bot and start the mentor session
-if 'mentor_bot' not in st.session_state:
-    st.session_state.mentor_bot = MentorBot()
+# Instantiate Ally and start the session
+if 'ally_bot' not in st.session_state:
+    st.session_state.ally_bot = AllyBot()
 
-st.session_state.mentor_bot.mentor_session()
+st.session_state.ally_bot.mentor_session()
