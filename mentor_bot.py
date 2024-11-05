@@ -87,9 +87,9 @@ class MentorBot:
         }
         return feedback_responses.get(delivery_preference, "constructive")
 
-    def mentor_session(self):
+        def mentor_session(self):
         st.write(self.greet())
-
+        
         # Input for user name
         name_response = self.get_user_name()
         if name_response:
@@ -101,12 +101,19 @@ class MentorBot:
         if user_input:
             # Respond based on sentiment
             st.write(self.respond_to_emotion(user_input))
-
-            # Ask if user wants feedback delivery in a specific style
+            
+            # Define feedback
             feedback = "Your recent work shows great potential, but you might want to focus on improving X."
-            st.write("How would you like feedback delivered? Options: 'constructive', 'supportive', 'humor'")
+            
+            # Ask user to choose a feedback style
+            st.write("How would you like feedback delivered?")
             feedback_style = st.selectbox("Choose a style:", ["constructive", "supportive", "humor"])
-            st.write(self.deliver_feedback(feedback, feedback_style))
+
+            # Display feedback after selection
+            if feedback_style:
+                full_feedback = self.deliver_feedback(feedback, feedback_style)
+                st.write(full_feedback)
+                
 
 # Instantiate the bot and start the mentor session
 if 'mentor_bot' not in st.session_state:
