@@ -91,7 +91,7 @@ class MentorBot:
             st.write(self.respond_to_emotion(user_input))
             
             # Define feedback and ask user for feedback style
-            feedback = "Your recent work shows great potential, but you might want to focus on improving X."
+            feedback = "Your recent work shows great potential, but you might want to focus on improving me, Ally your buddy."
             st.write("How would you like feedback delivered?")
             feedback_style = st.selectbox("Choose a style:", ["constructive", "supportive", "humor"])
 
