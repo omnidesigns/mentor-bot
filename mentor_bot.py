@@ -24,7 +24,6 @@ else:
 # Define the Ally (MentorBot) class
 class AllyBot:
     def __init__(self):
-        self.user_info = {}
         self.sia = SentimentIntensityAnalyzer()
 
     def greet(self):
@@ -36,9 +35,9 @@ class AllyBot:
         return random.choice(greetings)
 
     def get_user_name(self):
-        if 'name' not in self.user_info:
-            self.user_info['name'] = st.text_input("What should I call you?")
-        return f"Nice to meet you, {self.user_info['name']}!" if self.user_info['name'] else ""
+        if 'name' not in st.session_state:
+            st.session_state['name'] = st.text_input("What should I call you?")
+        return st.session_state['name']
 
     def respond_to_emotion(self, text):
         sentiment_score = self.sia.polarity_scores(text)['compound']
@@ -75,16 +74,15 @@ class AllyBot:
         st.write(self.greet())
         
         # Input for user name
-        name_response = self.get_user_name()
-        if name_response:
-            st.write(name_response)
+        user_name = self.get_user_name()
+        if user_name:
+            st.write(f"Nice to meet you, {user_name}!")
 
         # Conversation input
         user_input = st.text_input("What's on your mind?", help="Type your work-related question or concern here.")
 
         # Define feedback and ask user for feedback style if the user enters text
         if user_input:
-            user_name = self.user_info.get('name', 'there')
             st.write(f"Thanks for sharing, {user_name}.")
             st.write(self.respond_to_emotion(user_input))
             
