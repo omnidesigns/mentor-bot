@@ -15,6 +15,57 @@ nltk.download('vader_lexicon')
 # Set the OpenAI API key from environment variables
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
+# CSS for robot icon and styling
+st.markdown(
+    """
+    <style>
+    .robot-icon {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #4CAF50; /* green color for the robot */
+        margin-bottom: 15px;
+    }
+    .robot-head {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: #4CAF50;
+        border-radius: 8px;
+        position: relative;
+        margin-right: 10px;
+    }
+    .robot-head::before, .robot-head::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background-color: #FFFFFF; /* white for eyes */
+        top: 10px;
+        border-radius: 50%;
+    }
+    .robot-head::before {
+        left: 8px;
+    }
+    .robot-head::after {
+        right: 8px;
+    }
+    .robot-mouth {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 16px;
+        height: 4px;
+        background-color: #FFFFFF; /* white mouth */
+        border-radius: 2px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Define the Ally (MentorBot) class
 class AllyBot:
     def __init__(self):
@@ -57,6 +108,8 @@ class AllyBot:
             return "I'm currently at my usage limit. Please try again later."
 
     def mentor_session(self):
+        # Display robot icon and greeting message
+        st.markdown('<div class="robot-icon"><div class="robot-head"><div class="robot-mouth"></div></div>Ally</div>', unsafe_allow_html=True)
         st.write(self.greet())
         
         # Get or prompt for the user's name
