@@ -15,12 +15,6 @@ nltk.download('vader_lexicon')
 # Set the OpenAI API key from environment variables
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-# Debugging: Print the API key status (remove this in production)
-if openai.api_key:
-    print("OpenAI API key successfully loaded.")
-else:
-    print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
-
 # Define the Ally (MentorBot) class
 class AllyBot:
     def __init__(self):
@@ -36,7 +30,7 @@ class AllyBot:
 
     def get_user_name(self):
         # Check if the user's name is stored in session state
-        if 'name' not in st.session_state:
+        if 'name' not in st.session_state or not st.session_state['name']:
             st.session_state['name'] = st.text_input("What should I call you?")
         return st.session_state['name']
 
@@ -78,8 +72,12 @@ class AllyBot:
         
         # Get or prompt for the user's name
         user_name = self.get_user_name()
-        if user_name:
-            st.write(f"Nice to meet you, {user_name}!")
+        
+        # Display the name prompt until user has entered their name
+        if not user_name:
+            st.stop()  # Stop the execution until the user enters a name
+
+        st.write(f"Nice to meet you, {user_name}!")
 
         # Prompt for the user's main question or concern
         user_input = st.text_input("What's on your mind?", help="Type your work-related question or concern here.")
