@@ -24,14 +24,14 @@ st.markdown(
         align-items: center;
         font-size: 1.5rem;
         font-weight: bold;
-        color: #4CAF50; /* green color for the robot */
+        color: #b51963; /* green color for the robot */
         margin-bottom: 15px;
     }
     .robot-head {
         display: inline-block;
         width: 40px;
         height: 40px;
-        background-color: #4CAF50;
+        background-color: #b51963;
         border-radius: 8px;
         position: relative;
         margin-right: 10px;
