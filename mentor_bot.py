@@ -35,11 +35,13 @@ class AllyBot:
         return random.choice(greetings)
 
     def get_user_name(self):
+        # Check if the user's name is stored in session state
         if 'name' not in st.session_state:
             st.session_state['name'] = st.text_input("What should I call you?")
         return st.session_state['name']
 
     def respond_to_emotion(self, text):
+        # Analyze sentiment to give an emotional response
         sentiment_score = self.sia.polarity_scores(text)['compound']
         if sentiment_score >= 0.5:
             response = "I'm glad you're feeling positive! Let me know how I can assist you further."
@@ -50,6 +52,7 @@ class AllyBot:
         return response
 
     def generate_feedback(self, feedback_request, style="constructive"):
+        # Generate feedback based on the input and selected style
         prompt = (
             f"As a mentor and work buddy, respond with a {style} style to the following work-related concern: '{feedback_request}'."
             f" Provide detailed support and advice in a {style} tone."
@@ -73,28 +76,28 @@ class AllyBot:
     def mentor_session(self):
         st.write(self.greet())
         
-        # Input for user name
+        # Get or prompt for the user's name
         user_name = self.get_user_name()
         if user_name:
             st.write(f"Nice to meet you, {user_name}!")
 
-        # Conversation input
+        # Prompt for the user's main question or concern
         user_input = st.text_input("What's on your mind?", help="Type your work-related question or concern here.")
 
-        # Define feedback and ask user for feedback style if the user enters text
+        # If there is user input, proceed to feedback style selection
         if user_input:
             st.write(f"Thanks for sharing, {user_name}.")
             st.write(self.respond_to_emotion(user_input))
             
-            # Select feedback style
+            # Allow user to select feedback style
             st.write("How would you like my feedback delivered?")
             feedback_style = st.selectbox("Choose a style:", ["constructive", "supportive", "humor"])
 
             if feedback_style:
-                # Generate feedback based on the user input and selected style
+                # Generate Ally's response with the selected style
                 ally_response = self.generate_feedback(user_input, feedback_style)
 
-                # Display Ally's response with an appropriate emoji
+                # Add an emoji for each feedback style
                 style_emoji = {
                     "constructive": "🤓",
                     "supportive": "🤗",
