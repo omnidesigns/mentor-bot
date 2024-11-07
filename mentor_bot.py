@@ -34,17 +34,6 @@ class AllyBot:
             st.session_state['name'] = st.text_input("What should I call you?")
         return st.session_state['name']
 
-    def respond_to_emotion(self, text):
-        # Analyze sentiment to give an emotional response
-        sentiment_score = self.sia.polarity_scores(text)['compound']
-        if sentiment_score >= 0.5:
-            response = "I'm glad you're feeling positive! Let me know how I can assist you further."
-        elif sentiment_score <= -0.5:
-            response = "It sounds like things might be challenging. I'm here to support you however you need."
-        else:
-            response = "Thanks for sharing. I'm here to provide any support or advice you need."
-        return response
-
     def generate_feedback(self, feedback_request, style="constructive"):
         # Generate feedback based on the input and selected style
         prompt = (
@@ -85,7 +74,6 @@ class AllyBot:
         # If there is user input, proceed to feedback style selection
         if user_input:
             st.write(f"Thanks for sharing, {user_name}.")
-            st.write(self.respond_to_emotion(user_input))
             
             # Allow user to select feedback style
             st.write("How would you like my feedback delivered?")
